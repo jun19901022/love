@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState, useCallback } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import axios from 'axios';
+import Papa from 'papaparse';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoibXV5YW5mdSIsImEiOiJ6UUZKT2tjIn0.L1s3f-7eyMZ5IplzE6K4Lg';  // 使用你的 Mapbox Access Token
 
@@ -59,6 +60,23 @@ const App = () => {
 
     // 为地图绑定点击事件
     map.current.on('click', handleMapClick);
+
+    // 从CSV文件加载标记
+    axios.get('/5.csv')  // 确保CSV文件在public目录下
+      .then((response) => {
+        Papa.parse(response.data, {
+          header: true,
+          skipEmptyLines: true,
+          complete: (result) => {
+            result.data.forEach((row) => {
+              const lngLat = { lng: parseFloat(row.longitude), lat: parseFloat(row.latitude) };
+              const description = row.description;
+              addMarker(lngLat, description);
+            });
+          },
+        });
+      })
+      .catch((error) => console.error('CSV加载错误:', error));
   }, [addMarker, handleMapClick]);
 
   // 删除标记的函数
