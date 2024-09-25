@@ -14,7 +14,7 @@ const App = () => {
 
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: 'mapbox://styles/muyanfu/cm1boqfkw025c01q13qx4e7po', // 使用你的自定义样式 URL
+      style: 'mapbox://styles/mapbox/streets-v11', // 使用 Mapbox 默认样式
       center: [121.4737, 31.2304], // 上海坐标
       zoom: 10,
     });
